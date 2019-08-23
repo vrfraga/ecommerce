@@ -25,13 +25,13 @@ class Category extends Model{
             
             $sql = new Sql();
             
-            $resutlts =  $sql->select("CALL sp_categories_save(:idcategory, :descategory)", array(
+            $results =  $sql->select("CALL sp_categories_save(:idcategory, :descategory)", array(
                   ":idcategory"=>$this->getidcategory(),
                   ":descategory"=>$this->getdescategory(),
            
             ));
             
-            $this->setData($resutlts[0]);         
+            $this->setData($results[0]);         
        
         }
         
@@ -41,10 +41,10 @@ class Category extends Model{
             $sql = new Sql();
             
             $results = $sql->select("SELECT * FROM tb_categories WHERE idcategory = :idcategory", [
-                ':idcategory'=>$idcategory
+                ":idcategory"=>$idcategory
             ]);
             
-            $this->setData($results[0]);
+            $this->setData($results[0]);   
                     
             
         }
@@ -54,8 +54,8 @@ class Category extends Model{
             
             $sql = new Sql();
             
-            $sql->query("DELETE * FROM tb_categories WHERE idcategory = :idcategory", [
-                ':idcategory'=> $this->getCategory()
+            $sql->query("DELETE FROM tb_categories WHERE idcategory = :idcategory", [
+                ":idcategory"=>$this->getidcategory()
             ]);                    
             
         }

@@ -229,94 +229,94 @@ $app->post("/admin/forgot/reset", function(){
         
        });     
        
-       $app->get("/admin/categories", function() {
+$app->get("/admin/categories", function() {
            
-           User::verifyLogin();
+        User::verifyLogin();
            
-           $categories = Category::listAll();
+        $categories = Category::listAll();
           
-           $page = new PageAdmin();
-           
-           $page->setTpl("categories", [
+        $page = new PageAdmin();
+          
+        $page->setTpl("categories", [
                
-               'categories'=>$categories
+        "categories"=>$categories
                
-           ]);
+        ]);
            
-           });
+});
            
-           $app->get("/admin/categories/create", function() {
+$app->get("/admin/categories/create", function() {
                
-               User::verifyLogin();
+        User::verifyLogin();
                                
-           $page = new PageAdmin();
+        $page = new PageAdmin();
            
-           $page->setTpl("categories-create");
+        $page->setTpl("categories-create");
            
-           });
+});
            
-           $app->get("/admin/categories/create", function() {
+$app->post("/admin/categories/create", function() {
                
-               User::verifyLogin();
+        User::verifyLogin();
                                
-           $category = new Category();
+        $category = new Category();
            
-           $categoy->setData($_POST);
+        $category->setData($_POST);
            
-           $category->save();
+        $category->save();
            
-           header('Location: /admin/categories');
-           exit;
+        header('Location: /admin/categories');
+        exit;
            
-           });
+});
            
-           $app->get("/admin/categories/:idcategory/delete", function($idcategory) {
+$app->get("/admin/categories/:idcategory/delete", function($idcategory) {
                
-               User::verifyLogin();
+        User::verifyLogin();
                                
-           $category = new Category();
+        $category = new Category();
            
-           $categoy->get((int)$idcategory);
+        $category->get((int)$idcategory);
            
-           $category->delete();
+        $category->delete();
            
-           header('Location: /admin/categories');
-           exit;
+        header('Location: /admin/categories');
+        exit;
            
-           });
+});
            
-           $app->get("/admin/categories/:idcategory", function($idcategory) {
+$app->get("/admin/categories/:idcategory", function($idcategory) {
                
-               User::verifyLogin();
+        User::verifyLogin();
                
-               $category = new Category();
+        $category = new Category();
                
-               $category->get((int)$idcategory);
+        $category->get((int)$idcategory);
                                
-               $page = new PageAdmin();
+        $page = new PageAdmin();
            
-               $page->setTpl("categories-update", [
-                   'category'=>$category->getValues()
-               ]);
+        $page->setTpl("categories-update", [
+            "category"=>$category->getValues()
+        ]);
                
-               });
+});
                
-               $app->post("/admin/categories/:idcategory", function($idcategory) {
+$app->post("/admin/categories/:idcategory", function($idcategory) {
                    
-                   User::verifyLogin();
+        User::verifyLogin();
                
-                   $category = new Category();
+        $category = new Category();
                
-                   $category->get((int)$idcategory); 
+        $category->get((int)$idcategory); 
                
-                   $category->setData($_POST);
-               
-                   $category->save();
-                   
-                   header('Location: /admin/categories');
-                   exit;
+        $category->setData($_POST);
            
-           });
+        $category->save();
+                   
+        header('Location: /admin/categories');
+        exit;
+           
+});
            
            
 $app->run();
