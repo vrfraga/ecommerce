@@ -62,7 +62,7 @@ $app->get("/admin/products/:idproduct", function($idproduct) {
     
 });
 
-//rota para inserir uma foto nasta products
+//rota para inserir uma foto na pasta products
 $app->post("/admin/products/:idproduct", function($idproduct) {
     
     User::verifyLogin();
