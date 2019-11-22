@@ -11,6 +11,9 @@ class User extends Model{
     
     const SESSION = "User";
     const SECRET = "HcodePHP7_Secret";
+    const ERROR = "UserError";
+    const ERROR_REGISTER = "UserErrorRegister";
+    
     
     
     public static function getFromSession()
@@ -134,9 +137,9 @@ class User extends Model{
             $sql = new Sql();
             
             $resutlts =  $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
-                  ":desperson"=>$this->getdesperson(),
+                  ":desperson"=> utf8_decode($this->getdesperson()),
                   ":deslogin"=>$this->getdeslogin(),
-                  ":despassword"=>$this->getdespassword(),
+                  ":despassword"=>User::getPasswordHash($this->getdespassword()),
                   ":desemail"=>$this->getdesemail(),
                   ":nrphone"=>$this->getnrphone(),
                   ":inadmin"=>$this->getinadmin()                   
@@ -155,7 +158,11 @@ class User extends Model{
                 ":iduser"=>$iduser
             ));
             
-            $this->setData($results[0]);
+            $data = $results[0];
+            
+            $data['desperson'] = utf8_encode($data['desperson']);
+            
+            $this->setData($data);
         }
           
         public function update()
@@ -164,9 +171,9 @@ class User extends Model{
             
             $resutlts =  $sql->select("CALL sp_usersupdate_save(:iduser, :desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
                   ":iduser"=>$this->getiduser(),
-                  ":desperson"=>$this->getdesperson(),
+                  ":desperson"=> utf8_decode($this->getdesperson()),
                   ":deslogin"=>$this->getdeslogin(),
-                  ":despassword"=>$this->getdespassword(),
+                  ":despassword"=>User::getPasswordHash($this->getdespassword()),
                   ":desemail"=>$this->getdesemail(),
                   ":nrphone"=>$this->getnrphone(),
                   ":inadmin"=>$this->getinadmin()                   
