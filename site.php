@@ -178,9 +178,8 @@ $app->get("/login", function(){
     $page = new Page();
     
     $page->setTpl("login", [
-        'error'=>User::getError()   
-              
-    ]); 
+        'error'=>User::getError()
+  ]); 
     
 });
 
@@ -207,6 +206,91 @@ $app->get("/logout", function(){
     
     header("Location: /login");
     exit;
+    
+});
+
+$app->post("/register", function(){
+    
+    $_SESSION['registerValues'] = $_POST;
+    
+    if(!isset($_POST['name']) || $_POST['name'] == '') {
+        
+       User::setErrorRegister("Preenncha o seu nome");
+       header("Location /login");
+       exit; 
+    }
+    
+    $user = new User();
+    
+    $user->setData([
+       'inadmin'=>0,
+       'deslogin'=>$_POST´['email'],
+       'desperson'=>$_POST´['name'],
+       'desemail'=>$_POST´['email'],
+       'despassword'=>$_POST´['password'],
+       'nfphone'=>$_POST´['phone'],
+               
+    ]);
+    
+    $user->save();
+    
+    User::login($_POST['email'], $_POST['password']);
+    
+    header('Location /checkout');
+    exit;
+    
+});
+
+$app->get("/checkout", function(){
+    
+   User::verifyLogin(false); 
+    
+   $cart = Cart::getFromSession();
+   
+   $address = new Address();
+   
+   $page = new Page();
+   
+   $page->setTpl("checkou", [ 
+       'cart'=>$cart->getValues(),
+       'address'=>$address->getValues()
+   ]);
+   
+ });
+ 
+ $app->get("/login", function(){
+    
+   $page = new Page();
+   
+   $page->setTpl("login" []
+        'error'=>User::getError()
+   
+     );
+    
+});
+
+ $app->post("/login", function(){
+     
+     try {
+    
+        User::login($_POST['login'], $_POST['password']);
+      
+     } catch (Exception $e) {
+         
+         User::setError($e->getMessage());
+     }
+     
+     header("Location: /checkou");
+     exist;
+});
+
+
+$app->get("logout", function(){
+    
+    User::logout();
+    
+    header("Location: /login");
+    
     
 });
 
