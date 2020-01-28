@@ -272,14 +272,14 @@ $app->post("/checkout" , function(){
     
     $order = new Order();
     
-    $totals = $cart->getCalculateTotal();
+    $cart->getCalculateTotal();
     
     $order->setData([ 
         'idcart'=>$cart->getidcart(),
         'idaddress'=>$address->getidaddress(),
         'iduser'=>$user->getiduser(),
         'idstatus'=>OrderStatus::EM_ABERTO,
-        'vltotal'=>$totals['vlprice'] + $cart->getvlfreight()        
+        'vltotal'=>$cart->getvltotal()        
         
     ]);
     
@@ -440,7 +440,7 @@ $app->get("logout", function(){
 
 $app->post("/register", function(){
     
-    if (!isset($_POST['name']) $$ $_POST['name'] == '') {
+    if (!isset($_POST['name']) || $_POST['name'] == '') {
           
         User::setErrorRegister("Preencha o seu nome");
         header("Location: /login");
@@ -535,7 +535,7 @@ $app->get("/profile", function(){
     $page = new Page();
     
     $page->setTpl("profile" , [
-        'user'=>$user->getValues()
+        'user'=>$user->getValues(),
         'profileMsg'=>User::Success(),
         'profileError'=>User::getError()
         ]);
@@ -613,11 +613,13 @@ $app->get("/boleto/:idorder", function ($idorder){
     $order = new Order();
     
     $order->get((int)$idorder);
-
+    
+    //DADOS DO BOLETO PARA O SEU CLIENTE
     $dias_de_prazo_para_pagamento = 10;
     $taxa_boleto = 5.00;
     $data_venc = date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias OU informe data: "13/04/2006"; 
     $valor_cobrado = formatPrice($order->getVltotal()); // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+    $valor_cobrado = str_replace(".", "",$valor_cobrado);
     $valor_cobrado = str_replace(",", ".",$valor_cobrado);
     $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
 
@@ -631,7 +633,7 @@ $app->get("/boleto/:idorder", function ($idorder){
     // DADOS DO SEU CLIENTE
     $dadosboleto["sacado"] = $order->getdesperson();
     $dadosboleto["endereco1"] = $order->getdesaddress(). " " . $order->getdesdistrict();
-    $dadosboleto["endereco2"] =  ." ". order->getdescity()." - ". $order->getdesstate(). " - ". order->getdescountry() . " - CEP: " . $order->getdeszipcode;
+    $dadosboleto["endereco2"] = $order->getdescity()." - ". $order->getdesstate(). " - ". $order->getdescountry() . " - CEP: " . $order->getdeszipcode;
 
     // INFORMACOES PARA O CLIENTE
     $dadosboleto["demonstrativo1"] = "Pagamento de Compra na Loja Hcode E-commerce";
@@ -678,4 +680,57 @@ $app->get("/boleto/:idorder", function ($idorder){
     
 });
 
-?>
+$app->get("/profile/orders", function() {
+    
+
+    // Verifica o login do usuário
+    User::verifyLogin(false);
+    
+    // Busca a sessão do usuário
+    $user = User::getFromSession();
+    
+    // Carrega uma nova página
+    $page = new Page();
+    
+    // Carrega o tamplate profile-orders que está na pasta views
+    $page->setTpl("profile-orders", [
+        
+    // O método getOrders foi criando na classe User
+       'orders'=>$user->getOrders() 
+        
+    ]);
+    
+});
+
+$app->get("/profile/orders/:idorder", function($idorder){
+    
+    // Verifica o login do usuário
+    User::verifyLogin(false);
+    
+    // Busca o novo pedido
+    $order = new Order();
+    
+    //carrega o pedido
+    $order->get((int)$idorder);
+    
+    //pega o carrinho do pedido que o cliente está consultando
+    $cart = new Cart();
+    
+    $cart->get((int)$order->getidcart());
+        
+    $cart->getCalculateTotal();
+    
+    // Carrega uma nova página
+    $page = new Page();
+    
+    // Carrega o tamplate profile-orders que está na pasta views
+    $page->setTpl("profile-orders-detail", [      
+         'order'=>$order->getValues(),
+         'cart'=>$cart->getValues(),
+         'cart'=>$cart->getProducts()
+    
+     ]);      
+  
+});
+
+
