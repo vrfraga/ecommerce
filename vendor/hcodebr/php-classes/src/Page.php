@@ -27,12 +27,13 @@ class Page {
 
 	Tpl::configure( $config );  
         
-        $this->tpl = new Tpl;
+        $this->tpl = new tpl;
         
         $this->setData($this->options["data"]);
         
-        if ($this->options["header"] === true) $this->tpl->draw("header");
-        
+        if ($this->options["header"] === true) {
+            $this->tpl->draw("header");
+        }
     }
     
     
@@ -55,12 +56,11 @@ class Page {
     }
 
     
-
     public function __destruct() {
         
-            if ($this->options["footer"] === true) $this->tpl->draw("footer");
-        
-        
+        if ($this->options["footer"] === true) {
+            $this->tpl->draw("footer");
+        }
     }
     
     

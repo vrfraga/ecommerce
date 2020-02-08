@@ -394,7 +394,7 @@ $app->get("/checkout", function(){
    
    $page = new Page();
    
-   $page->setTpl("checkou", [ 
+   $page->setTpl("checkout", [ 
        'cart'=>$cart->getValues(),
        'address'=>$address->getValues()
    ]);

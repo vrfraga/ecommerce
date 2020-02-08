@@ -174,7 +174,7 @@ class Cart extends Model{
         $sql = new Sql();
         
         $results = $sql->select(" 
-                 SELECT SUM(vlprice) AS vlprice SUM(vlwidth) AS vlwidth, SUM(vlheight) AS vlheight, SUM(vllength) AS vllength, 
+                 SELECT SUM(vlprice) AS vlprice, SUM(vlwidth) AS vlwidth, SUM(vlheight) AS vlheight, SUM(vllength) AS vllength, 
                  SUM(vlweight) AS vlweight, COUNT(*) AS nrqtd
                  FROM tb_products a
                  INNER JOIN tb_cartsproducts b ON a.idproduct = b.idproduct
@@ -301,7 +301,7 @@ class Cart extends Model{
         
         $totals = $this->getProductsTotals();
         
-        $this->setvlsubtotal($totals['vlprice']);
+        $this->setvlsubtotals($totals['vlprice']);
         $this->setvtotal($totals['vlprice'] + $this->getvlfreight());
         
     }
