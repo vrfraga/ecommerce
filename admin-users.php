@@ -20,14 +20,13 @@ $app->get("/admin/users", function (){
          $pagination = User::getPage($page);          
          
      }
-     
-        
+             
      $pages = [];
      
      for ($x = 0; $x < $pagination['pages']; $x++)
      {
          array_push($pages,[ 
-            'href'=>'/admin/user:'. http_build_query([ 
+            'href'=>'/admin/users?'.http_build_query([ 
                 'page'=>$x+1,
                 'search'=>$search
             ]),     
@@ -39,7 +38,7 @@ $app->get("/admin/users", function (){
      $page = new PageAdmin();
      
      $page->setTpl("users", array(
-         "users"=>$users,
+         "users"=>$pagination['data'],
          "search"=>$search,
          "pages"=>$pages
              

@@ -85,15 +85,15 @@ class User extends Model{
             {
                
                 $user = new User();
-                                         
-                $data['desperson'] = utf8_encode($data['desperson']);
+                               
+              /*  $data['desperson'] = utf8_encode($data['desperson']); */
                 
-                $user->setData($data);  
-                
+                $user->setData($data);              
+                            
                 $_SESSION[User::SESSION] = $user->getValues();
                 
                 return $user;                                                                                 
-                               
+                        
             } else {
                 
                throw new \Exception("Usuário Inexistente ou Senha Inválida.");                 
@@ -487,7 +487,7 @@ class User extends Model{
         }
         
         
-         public static function getPageSearch($page = 1, $itemsPerPage = 10){
+         public static function getPageSearch($search, $page = 1, $itemsPerPage = 10){
             
             $start = ($page - 1) * $itemsPerPage;
             
