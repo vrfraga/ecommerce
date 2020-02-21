@@ -86,7 +86,7 @@ $app->get("/cart", function(){
 
 $app->get("/cart/:idproduct/add", function ($idproduct){
     
-    $producto = new Product();
+    $product = new Product();
     
     $product->get((int)$idproduct);
     
@@ -183,6 +183,7 @@ $app->get("/checkout", function(){
     
     
     if (!$address->getdesaddress()) $address->setdesaddress('');
+    if (!$address->getdesnumber()) $address->setdesnumber('');
     if (!$address->getdescomplement()) $address->setdescomplement('');
     if (!$address->getdesdistrict()) $address->setdesdistrict('');
     if (!$address->getdescity()) $address->setdescity('');
@@ -279,7 +280,7 @@ $app->post("/checkout" , function(){
         'idaddress'=>$address->getidaddress(),
         'iduser'=>$user->getiduser(),
         'idstatus'=>OrderStatus::EM_ABERTO,
-        'vltotal'=>$cart->getvltotal()        
+        'vltotal'=>$cart->getvltotal()       
         
     ]);
     
